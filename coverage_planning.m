@@ -5,10 +5,10 @@ close all;
 
 %% Set parameters
 randomMap = true;
-randomSeed = 5;
-mapWidth = 5;
-mapLength = 5;
-numberOfObstacles = 1;
+randomSeed = 10;
+mapWidth = 25;
+mapLength = 20;
+numberOfObstacles = 16;
 obstacleMaxSize = 4;
 
 startXY = [1 1];
@@ -27,12 +27,13 @@ omx(omx==1) = nan;
 %% Wavefront algorythm
 wf = wavefront(omx, startXY);
 
-path = planner(wf, [1,1], [mapLength, mapWidth])
+path = planner(wf, [1,1], [mapLength, mapWidth]);
 
 %% Draw figure
-fig = figure(1)
+fig = figure(1);
 hm = heatmap(fig, wf);
 hm.ColorbarVisible = false;
+hm.NodeChildren(3).YDir='normal';
 ax = axes;
 line([0,0],[20,20]);
 line( [20,20], [0,0]);

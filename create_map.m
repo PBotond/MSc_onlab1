@@ -1,15 +1,15 @@
-function [omap] = create_map(mapLength, mapWidth, obstacleMaxSize, numberOfObstacles)
+function [omap] = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles)
 %CREATE_MAP Create occupancy map with paramters
 % Create the binary occupancy map object
-omap = binaryOccupancyMap(mapLength, mapWidth);
+omap = binaryOccupancyMap(mapWidthX, mapHeightY);
 
 % Generate obstacles
 obstacleNumber = 1;
 while obstacleNumber <= numberOfObstacles
     width = randi([1 obstacleMaxSize],1);
     length = randi([1 obstacleMaxSize],1);
-    xPosition = randi([0 mapWidth-width],1);
-    yPosition = randi([0 mapLength-length],1);
+    xPosition = randi([0 mapHeightY-width],1);
+    yPosition = randi([0 mapWidthX-length],1);
 
     [xObstacle,yObstacle] = meshgrid(xPosition:xPosition+width,yPosition:yPosition+length);
     xyObstacles = [xObstacle(:) yObstacle(:)];

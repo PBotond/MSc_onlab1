@@ -1,43 +1,25 @@
-function [path] = planner(wf, goalXY, startXY)
+function [path] = planner(wf, startXY)
 %PLANNER Plan path on occupancy matrix
-visited = zeros([width(wf), height(wf)]);
-cX = startXY(1);
-cY =startXY(2);
 
-path = [cX, cY];
-visited(cX, cY) = 1;
-[path, visited] = move(wf, goalXY, cX, cY, path, visited);
+visited = isnan(wf);
+path = [];
+
+[path, ~] = move(wf, startXY, path, visited);
 
 end
 
 %%
 
-function [path2, visited2] = move(wf, goalXY, cX, cY, path, visited)
-
-visited(cX, cY) = 1;
-nbrs = [cX-1, cY; cX+1, cY; cX, cY-1; cX, cY+1];
-
-hi_wf = 0;
-hi_i = 0;
-
-for(i = 1:4)
-    if(nbrs(i,1) <= width(wf) && nbrs(i,1) > 0 && nbrs(i,2) <= height(wf) && nbrs(i,2) > 0 && ~(isnan(wf(nbrs(i,2), nbrs(i,1)))))
-        if(visited(nbrs(i,1), nbrs(i,2)) == 0)
-           if(hi_wf < wf(nbrs(i,1), nbrs(i,2)))
-               hi_wf = wf(nbrs(i,1), nbrs(i,2));
-               hi_i = i;
-           end
-        end
-    end
+function [path2, visited2] = move(wf, XY, path, visited)
+nbr = findMaxNbrDT(wf, visited, XY);
+visited(XY(1), XY(2)) = visited(XY(1), XY(2)) + 1;
+path = [path; XY];
+while ~isempty(nbr)
+    [path, visited] = move(wf, nbr, path, visited);
+    visited(XY(1), XY(2)) = visited(XY(1), XY(2)) + 1;
+    path = [path; XY];
+    nbr = findMaxNbrDT(wf, visited, XY);
 end
-
-if(hi_i ~= 0)
-    path(end+1,:) = [nbrs(hi_i,1), nbrs(hi_i,2)];
-    [path, visited] = move(wf, goalXY, nbrs(hi_i,1), nbrs(hi_i,2), path, visited);
-    
-end
-
-path(end+1,:) = [cX, cY];
 
 path2 = path;
 visited2 = visited;
@@ -45,3 +27,27 @@ visited2 = visited;
 end
 
 % visited: tárolja, hogy hányszor léptem az adott mezőre!
+
+%%
+
+function nbr = findMaxNbrDT(wf, visited, XY)
+% Define 4-connected neighbourhood
+directions = [-1, 0; 1, 0; 0, -1; 0, 1];
+maxDT = -inf;
+nbr = [];
+
+% Check all neighbours
+for i = 1:length(directions)
+    nextXY = XY + directions(i, :);
+
+    % Check if next cell is within grid and not visited
+    if nextXY(1) >= 1 && nextXY(1) <= size(wf, 1) && nextXY(2) >= 1 && nextXY(2) <= size(wf, 2) && ~visited(nextXY(1), nextXY(2))
+        % Check if next cell has a higher distance transform
+        if wf(nextXY(1), nextXY(2)) > maxDT
+            nbr = nextXY;
+            maxDT = wf(nextXY);
+        end
+    end
+end
+
+end

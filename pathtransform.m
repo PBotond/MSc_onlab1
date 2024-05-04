@@ -1,4 +1,4 @@
-function [wf] = wavefront(omx, goalXY)
+function [wf] = pathtransform(omx, goalXY, dt)
 %% Run a wavefront through an occupancy matrix
 
 cX = goalXY(1,1);
@@ -22,22 +22,21 @@ while(isnan(omx(cX, cY)) && step < numel(omx))
     end
 end
 
-dist = 1;
-omx(cX, cY) = dist;
-wf = propagateWf(omx, cX, cY, dist);
+omx(cX,cY) = dt(cX, cY);
+wf = propagateWf(omx, cX, cY, dt(cX,cY), dt);
 
 end
 
 %%
 
-function [wf] = propagateWf(omx, cX, cY, dist)
+function [wf] = propagateWf(omx, cX, cY, curr, dt)
 nbrs = [cX-1, cY; cX+1, cY; cX, cY-1; cX, cY+1];
 
 for i = 1:4
     if(nbrs(i,1) <= height(omx) && nbrs(i,1) > 0 && nbrs(i,2) <= width(omx) && nbrs(i,2) > 0)
-        if(omx(nbrs(i,1), nbrs(i,2)) == 0 || omx(nbrs(i,1), nbrs(i,2)) > dist+1)
-            omx(nbrs(i,1), nbrs(i,2)) = dist+1;
-            omx = propagateWf(omx, nbrs(i,1), nbrs(i,2), dist+1);
+        if(omx(nbrs(i,1), nbrs(i,2)) == 0 || omx(nbrs(i,1), nbrs(i,2)) > curr+dt(nbrs(i,1), nbrs(i,2))+1)
+            omx(nbrs(i,1), nbrs(i,2)) = curr+dt(nbrs(i,1), nbrs(i,2))+1;
+            omx = propagateWf(omx, nbrs(i,1), nbrs(i,2), curr+dt(nbrs(i,1), nbrs(i,2))+1, dt);
         end
     end
 end

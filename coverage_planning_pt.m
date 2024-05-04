@@ -6,10 +6,10 @@ close all;
 %% Set parameters
 randomMap = true;
 randomSeed = 10;
-mapHeightY = 30;
-mapWidthX = 30;
-numberOfObstacles = 20;
-obstacleMaxSize = 5;
+mapHeightY = 25;
+mapWidthX = 20;
+numberOfObstacles = 15;
+obstacleMaxSize = 8;
 
 startXY = [1 1];
 
@@ -22,15 +22,18 @@ omap = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles);
 
 % Store map in matrix
 omx = double(occupancyMatrix(omap));
+dt = bwdist(omx);
+dt = round((1./dt).*10);
+dt(dt==inf) = 0;
 omx(omx==1) = nan;
 
 %% Wavefront algorythm
-wf = wavefront(omx, startXY);
+wf = pathtransform(omx, startXY, dt);
 
 path = planner(wf, [mapHeightY, mapWidthX]);
 
 %% Draw figure
-fig = figure(1);
+fig = figure(2);
 hm = heatmap(fig, wf);
 hm.ColorbarVisible = false;
 hm.NodeChildren(3).YDir='normal';

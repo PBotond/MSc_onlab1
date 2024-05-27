@@ -4,33 +4,25 @@ close all;
 
 %% Set parameters
 doPT = false; %false = only distance transform
-drawFigure = false;
+drawFigure = true;
 startXY = [1 1];
 smartBackTrack = true;
 
-iter = 1;
-data = [];
-while height(data)<100
-    iter = iter+1;
-    newMap = true;
-    randomMap = false;
-    randomSeed = iter;
+newMap = false;
+randomMap = true;
+randomSeed = 10;
 
-    mapHeightY = 15;
-    mapWidthX = 15;
-    numberOfObstacles = 8;
-    obstacleMaxSize = 4;
-    %% Generate map
-    if (~randomMap)
-        rng(randomSeed,"twister");
-    end
-    if newMap
-        omap = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles);
-    end
-
-    %% Path planning
-    [freeCells, pathLength, num90s, num180s, pathPerc] = fullPlan(doPT, drawFigure, startXY, omap, smartBackTrack);
-    if ~isnan(pathLength)
-        data = [data; freeCells, pathLength, num90s, num180s, pathPerc];
-    end
+mapHeightY = 50;
+mapWidthX = 50;
+numberOfObstacles = 18;
+obstacleMaxSize = 4;
+%% Generate map
+if (~randomMap)
+    rng(randomSeed,"twister");
 end
+if newMap
+    omap = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles);
+end
+
+%% Path planning
+[pathLength, num90s, num180s, pathPerc] = fullPlan(doPT, drawFigure, startXY, omap, smartBackTrack)

@@ -1,45 +1,36 @@
 %% Reset
-clear;
 clc;
 close all;
 
 %% Set parameters
-randomMap = true;
-randomSeed = 10;
-mapHeightY = 30;
-mapWidthX = 30;
-numberOfObstacles = 20;
-obstacleMaxSize = 5;
-
+doPT = false; %false = only distance transform
+drawFigure = false;
 startXY = [1 1];
+smartBackTrack = true;
 
-%% Generate map
-if (~randomMap)
-    rng(randomSeed,"twister");
+iter = 1;
+data = [];
+while height(data)<100
+    iter = iter+1;
+    newMap = true;
+    randomMap = false;
+    randomSeed = iter;
+
+    mapHeightY = 15;
+    mapWidthX = 15;
+    numberOfObstacles = 8;
+    obstacleMaxSize = 4;
+    %% Generate map
+    if (~randomMap)
+        rng(randomSeed,"twister");
+    end
+    if newMap
+        omap = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles);
+    end
+
+    %% Path planning
+    [freeCells, pathLength, num90s, num180s, pathPerc] = fullPlan(doPT, drawFigure, startXY, omap, smartBackTrack);
+    if ~isnan(pathLength)
+        data = [data; freeCells, pathLength, num90s, num180s, pathPerc];
+    end
 end
-
-omap = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles);
-
-% Store map in matrix
-omx = double(occupancyMatrix(omap));
-omx(omx==1) = nan;
-
-%% Wavefront algorythm
-wf = wavefront(omx, startXY);
-
-path = planner(wf, [mapHeightY, mapWidthX]);
-
-%% Draw figure
-fig = figure(1);
-hm = heatmap(fig, wf);
-hm.ColorbarVisible = false;
-hm.NodeChildren(3).YDir='normal';
-ax = axes;
-line([0,0],[mapHeightY,mapWidthX]);
-line( [mapHeightY,mapWidthX], [0,0]);
-plot(path(:,2)-0.5, path(:,1)-0.5,'y-.','LineWidth',2);
-ax.YLim = [0,height(wf)];
-ax.XLim = [0, width(wf)];
-ax.Color = 'none';
-ax.XTick = [];
-ax.YTick = [];

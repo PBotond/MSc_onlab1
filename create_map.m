@@ -8,8 +8,8 @@ obstacleNumber = 1;
 while obstacleNumber <= numberOfObstacles
     width = randi([1 obstacleMaxSize],1);
     length = randi([1 obstacleMaxSize],1);
-    xPosition = randi([0 mapHeightY-width],1);
-    yPosition = randi([0 mapWidthX-length],1);
+    xPosition = randi([0 mapWidthX-width],1);
+    yPosition = randi([0 mapHeightY-length],1);
 
     [xObstacle,yObstacle] = meshgrid(xPosition:xPosition+width,yPosition:yPosition+length);
     xyObstacles = [xObstacle(:) yObstacle(:)];

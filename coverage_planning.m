@@ -6,16 +6,16 @@ close all;
 doPT = false; %false = only distance transform
 drawFigure = true;
 startXY = [1 1];
-smartBackTrack = true;
+smartBackTrack = false;
 
-newMap = false;
+newMap = true;
 randomMap = true;
 randomSeed = 10;
 
-mapHeightY = 50;
-mapWidthX = 50;
-numberOfObstacles = 18;
-obstacleMaxSize = 4;
+mapHeightY = 12;
+mapWidthX = 12;
+numberOfObstacles = 2;
+obstacleMaxSize = 5;
 %% Generate map
 if (~randomMap)
     rng(randomSeed,"twister");

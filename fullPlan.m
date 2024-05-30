@@ -48,6 +48,9 @@ end
 if drawFigure
     fig = figure();
     hm = heatmap(fig, wf);
+    s=struct(hm);
+    s.XAxis.Visible='off';
+    s.YAxis.Visible='off';
     hm.ColorbarVisible = false;
     hm.NodeChildren(3).YDir='normal';
     ax = axes;
@@ -70,6 +73,9 @@ if drawFigure
     ax.Color = 'none';
     ax.XTick = [];
     ax.YTick = [];
+    fontname("Times New Roman");
 
+    set (gca,'Position',[0 0 1 1]);
+    hm.InnerPosition = [0 0 1 1];
 end
 

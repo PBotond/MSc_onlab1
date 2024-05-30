@@ -1,5 +1,6 @@
 %% Reset
 clc;
+clear all;
 close all;
 
 %% Set parameters
@@ -10,23 +11,19 @@ smartBackTrack = true;
 
 iter = 1;
 data = [];
-while height(data)<100
+while height(data)<200
     iter = iter+1;
-    newMap = true;
-    randomMap = false;
+
     randomSeed = iter;
 
     mapHeightY = 15;
     mapWidthX = 15;
-    numberOfObstacles = 8;
-    obstacleMaxSize = 4;
+    numberOfObstacles = 12;
+    obstacleMaxSize = 3;
     %% Generate map
-    if (~randomMap)
-        rng(randomSeed,"twister");
-    end
-    if newMap
-        omap = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles);
-    end
+    rng(randomSeed,"twister");
+
+    omap = create_map(mapHeightY, mapWidthX, obstacleMaxSize, numberOfObstacles);
 
     %% Path planning
     [freeCells, pathLength, num90s, num180s, pathPerc] = fullPlan(doPT, drawFigure, startXY, omap, smartBackTrack);

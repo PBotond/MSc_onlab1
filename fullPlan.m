@@ -3,8 +3,12 @@ function [freeCells, pathLength, num90s, num180s, pathPerc] = fullPlan(doPT, dra
 omx = double(occupancyMatrix(omap));
 if (doPT == true)
     dt = bwdist(omx);
-    dt = round((1./dt).*3);
-    dt(dt==inf) = 0;
+    dt(dt>4) = NaN;
+    dt(dt==0) = NaN;
+    dt = 4 -dt;
+    dt = round(dt);
+    dt(isnan(dt)) = 0;
+    dt = dt.^(2);
 end
 
 omx(omx==1) = nan;
@@ -14,6 +18,7 @@ if (doPT == false)
     wf = wavefront(omx, startXY);
 else
     wf = pathtransform(omx, startXY, dt);
+    %wf = wavefront(omx, startXY) + dt;
 end
 
 if min(min(wf)) == 0
@@ -26,6 +31,7 @@ if min(min(wf)) == 0
     return;
 end
 %% Path planning
+%path = planner(wf, [height(omx), width(omx)]);
 if ~smartBackTrack
     [path, visited] = iterPlan(wf, [height(omx), width(omx)], omap);
 else
@@ -38,12 +44,13 @@ pathPerc = pathLength/freeCells*100;
 num90s = 0;
 num180s = 0;
 for j=2:length(path)-1
-    if path(j-1, 1) == path(j+1,1) && path(j-1,2) == path(j+1, 2)
-        num180s = num180s+1;
-    elseif path(j-1, 1) ~= path(j+1,1) && path(j-1,2) ~= path(j+1, 2)
-        num90s = num90s+1;
-    end
+   if path(j-1, 1) == path(j+1,1) && path(j-1,2) == path(j+1, 2)
+       num180s = num180s+1;
+   elseif path(j-1, 1) ~= path(j+1,1) && path(j-1,2) ~= path(j+1, 2)
+       num90s = num90s+1;
+   end
 end
+
 %% Draw figure
 if drawFigure
     fig = figure();

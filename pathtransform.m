@@ -22,8 +22,9 @@ while(isnan(omx(cX, cY)) && step < numel(omx))
     end
 end
 
-omx(cX,cY) = dt(cX, cY);
-wf = propagateWf(omx, cX, cY, dt(cX,cY), dt);
+
+omx(cX,cY) = dt(cX, cY)+1;
+wf = propagateWf(omx, cX, cY, dt(cX,cY)+1, dt);
 
 end
 

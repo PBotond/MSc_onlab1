@@ -8,13 +8,13 @@ drawFigure = true;
 startXY = [1 1];
 smartBackTrack = false;
 
-newMap = true;
+newMap = false;
 randomMap = true;
 randomSeed = 10;
 
 mapHeightY = 12;
 mapWidthX = 12;
-numberOfObstacles = 2;
+numberOfObstacles = 1;
 obstacleMaxSize = 5;
 %% Generate map
 if (~randomMap)
@@ -25,4 +25,4 @@ if newMap
 end
 
 %% Path planning
-[pathLength, num90s, num180s, pathPerc] = fullPlan(doPT, drawFigure, startXY, omap, smartBackTrack)
+[freeCells, pathLength, num90s, num180s, pathPerc] = fullPlan(doPT, drawFigure, startXY, omap, smartBackTrack)

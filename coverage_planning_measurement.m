@@ -18,8 +18,8 @@ while height(data)<200
 
     mapHeightY = 15;
     mapWidthX = 15;
-    numberOfObstacles = 12;
-    obstacleMaxSize = 3;
+    numberOfObstacles = 4;
+    obstacleMaxSize = 7;
     %% Generate map
     rng(randomSeed,"twister");
 

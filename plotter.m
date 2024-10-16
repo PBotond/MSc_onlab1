@@ -38,7 +38,8 @@ ylabel("Fordulások száma");
 plot(px1, py1);
 yyaxis right;
 scatter(x,y2, 'd');
-
+sMean2= sprintf("μ_{90} = %.3f; μ_{180} = %.3f", mean(data(:,3)), mean(data(:,4)));
+title(sMean2);
 grid on;
 grid minor;
 linkdata on;
